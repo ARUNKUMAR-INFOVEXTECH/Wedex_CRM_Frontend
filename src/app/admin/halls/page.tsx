@@ -135,51 +135,170 @@ export default function HallsPage() {
         </Table>
       </div>
 
-      {/* Create Modal */}
-      <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Create New Hall">
-        <form onSubmit={handleCreate} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-            <FormField label="Hall name *">
-              <input className="input" value={form.hall_name} onChange={e => setForm(p => ({ ...p, hall_name: e.target.value }))} required placeholder="Grand Palace Hall" />
-            </FormField>
-            <FormField label="Owner name *">
-              <input className="input" value={form.owner_name} onChange={e => setForm(p => ({ ...p, owner_name: e.target.value }))} required placeholder="John Smith" />
-            </FormField>
+      {/* Create Modal — full custom to fix overflow */}
+      {createOpen && (
+        <div
+          style={{
+            position: "fixed", inset: 0,
+            background: "rgba(0,0,0,0.45)",
+            backdropFilter: "blur(4px)",
+            zIndex: 50,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "1rem",
+            overflowY: "auto",
+          }}
+          onClick={(e) => e.target === e.currentTarget && setCreateOpen(false)}
+        >
+          <div style={{
+            background: "var(--bg-card)",
+            borderRadius: 20,
+            border: "1px solid var(--border)",
+            boxShadow: "0 24px 64px -12px rgba(0,0,0,0.15)",
+            width: "100%",
+            maxWidth: 620,
+            maxHeight: "90vh",
+            overflowY: "auto",
+            margin: "auto",
+          }}>
+            {/* Header */}
+            <div style={{
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              padding: "1.25rem 1.5rem",
+              borderBottom: "1px solid var(--border)",
+              position: "sticky", top: 0,
+              background: "var(--bg-card)",
+              zIndex: 1,
+              borderRadius: "20px 20px 0 0",
+            }}>
+              <div>
+                <h2 style={{ fontWeight: 600, fontSize: "1.125rem", color: "var(--text-primary)" }}>Create New Hall</h2>
+                <p style={{ fontSize: "0.8125rem", color: "var(--text-muted)", marginTop: 2 }}>Fill in the details to register a new marriage hall</p>
+              </div>
+              <button
+                className="btn btn-ghost btn-icon"
+                onClick={() => setCreateOpen(false)}
+                style={{ flexShrink: 0 }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+
+            {/* Body */}
+            <form onSubmit={handleCreate}>
+              <div style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+
+                {/* Section: Hall Info */}
+                <div>
+                  <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.875rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <div style={{ height: 1, flex: 1, background: "var(--border)" }} />
+                    Hall Information
+                    <div style={{ height: 1, flex: 1, background: "var(--border)" }} />
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                    <FormField label="Hall name *">
+                      <input className="input" value={form.hall_name} onChange={e => setForm(p => ({ ...p, hall_name: e.target.value }))} required placeholder="Grand Palace Hall" />
+                    </FormField>
+                    <FormField label="City">
+                      <input className="input" value={form.city} onChange={e => setForm(p => ({ ...p, city: e.target.value }))} placeholder="Chennai" />
+                    </FormField>
+                  </div>
+                  <div style={{ marginTop: "1rem" }}>
+                    <FormField label="Address">
+                      <input className="input" value={form.address} onChange={e => setForm(p => ({ ...p, address: e.target.value }))} placeholder="123 Main Street, Anna Nagar" />
+                    </FormField>
+                  </div>
+                </div>
+
+                {/* Section: Owner Info */}
+                <div>
+                  <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.875rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <div style={{ height: 1, flex: 1, background: "var(--border)" }} />
+                    Owner Details
+                    <div style={{ height: 1, flex: 1, background: "var(--border)" }} />
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                    <FormField label="Owner name *">
+                      <input className="input" value={form.owner_name} onChange={e => setForm(p => ({ ...p, owner_name: e.target.value }))} required placeholder="John Smith" />
+                    </FormField>
+                    <FormField label="Phone">
+                      <input className="input" value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} placeholder="+91 98765 43210" />
+                    </FormField>
+                  </div>
+                  <div style={{ marginTop: "1rem" }}>
+                    <FormField label="Owner email *">
+                      <input className="input" type="email" value={form.owner_email} onChange={e => setForm(p => ({ ...p, owner_email: e.target.value }))} required placeholder="owner@example.com" />
+                    </FormField>
+                  </div>
+                  <div style={{ marginTop: "1rem" }}>
+                    <FormField label="Password *" hint="A confirmation email will be sent to the owner after account creation">
+                      <input className="input" type="password" value={form.password} onChange={e => setForm(p => ({ ...p, password: e.target.value }))} required placeholder="Min. 8 characters" />
+                    </FormField>
+                  </div>
+                </div>
+
+                {/* Section: Subscription */}
+                <div>
+                  <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.875rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <div style={{ height: 1, flex: 1, background: "var(--border)" }} />
+                    Subscription Plan
+                    <div style={{ height: 1, flex: 1, background: "var(--border)" }} />
+                  </div>
+                  <FormField label="Package *">
+                    <select className="input" value={form.package_id} onChange={e => setForm(p => ({ ...p, package_id: e.target.value }))} required>
+                      <option value="">Select a package…</option>
+                      {packages.map(p => (
+                        <option key={p.id} value={p.id}>{p.name} — ₹{p.price}/{p.billing_cycle}</option>
+                      ))}
+                    </select>
+                  </FormField>
+
+                  {/* Package preview */}
+                  {form.package_id && (() => {
+                    const pkg = packages.find(p => p.id === form.package_id);
+                    if (!pkg) return null;
+                    return (
+                      <div style={{ marginTop: "0.75rem", background: "var(--accent-light)", border: "1px solid rgba(124,58,237,0.15)", borderRadius: "var(--radius)", padding: "0.875rem 1rem", display: "flex", gap: "1.5rem" }}>
+                        <div>
+                          <div style={{ fontSize: "0.72rem", color: "var(--accent)", fontWeight: 600, marginBottom: 2 }}>PRICE</div>
+                          <div style={{ fontWeight: 700, color: "var(--accent)" }}>₹{Number(pkg.price).toLocaleString()}/{pkg.billing_cycle}</div>
+                        </div>
+                        {pkg.max_users && <div>
+                          <div style={{ fontSize: "0.72rem", color: "var(--accent)", fontWeight: 600, marginBottom: 2 }}>MAX USERS</div>
+                          <div style={{ fontWeight: 600, color: "var(--accent)" }}>{pkg.max_users}</div>
+                        </div>}
+                        {pkg.max_bookings && <div>
+                          <div style={{ fontSize: "0.72rem", color: "var(--accent)", fontWeight: 600, marginBottom: 2 }}>MAX BOOKINGS</div>
+                          <div style={{ fontWeight: 600, color: "var(--accent)" }}>{pkg.max_bookings}</div>
+                        </div>}
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div style={{
+                display: "flex", gap: "0.75rem", justifyContent: "flex-end",
+                padding: "1rem 1.5rem",
+                borderTop: "1px solid var(--border)",
+                position: "sticky", bottom: 0,
+                background: "var(--bg-card)",
+                borderRadius: "0 0 20px 20px",
+              }}>
+                <button type="button" className="btn btn-secondary" onClick={() => setCreateOpen(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary" disabled={saving} style={{ minWidth: 140 }}>
+                  {saving && <span className="spinner" style={{ borderColor: "rgba(255,255,255,0.4)", borderTopColor: "white" }} />}
+                  {saving ? "Creating hall…" : "Create Hall"}
+                </button>
+              </div>
+            </form>
           </div>
-          <FormField label="Owner email *">
-            <input className="input" type="email" value={form.owner_email} onChange={e => setForm(p => ({ ...p, owner_email: e.target.value }))} required placeholder="owner@example.com" />
-          </FormField>
-          <FormField label="Password *" hint="A confirmation email will be sent to the owner">
-            <input className="input" type="password" value={form.password} onChange={e => setForm(p => ({ ...p, password: e.target.value }))} required placeholder="Min. 8 characters" />
-          </FormField>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-            <FormField label="Phone">
-              <input className="input" value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} placeholder="+91 98765 43210" />
-            </FormField>
-            <FormField label="City">
-              <input className="input" value={form.city} onChange={e => setForm(p => ({ ...p, city: e.target.value }))} placeholder="Chennai" />
-            </FormField>
-          </div>
-          <FormField label="Address">
-            <input className="input" value={form.address} onChange={e => setForm(p => ({ ...p, address: e.target.value }))} placeholder="123 Main Street" />
-          </FormField>
-          <FormField label="Package *">
-            <select className="input" value={form.package_id} onChange={e => setForm(p => ({ ...p, package_id: e.target.value }))} required>
-              <option value="">Select a package…</option>
-              {packages.map(p => (
-                <option key={p.id} value={p.id}>{p.name} — ₹{p.price}/{p.billing_cycle}</option>
-              ))}
-            </select>
-          </FormField>
-          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end", marginTop: "0.5rem" }}>
-            <button type="button" className="btn btn-secondary" onClick={() => setCreateOpen(false)}>Cancel</button>
-            <button type="submit" className="btn btn-primary" disabled={saving}>
-              {saving && <span className="spinner" style={{ borderColor: "rgba(255,255,255,0.4)", borderTopColor: "white" }} />}
-              {saving ? "Creating…" : "Create Hall"}
-            </button>
-          </div>
-        </form>
-      </Modal>
+        </div>
+      )}
     </div>
   );
 }
